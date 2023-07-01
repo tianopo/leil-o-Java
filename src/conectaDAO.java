@@ -1,9 +1,14 @@
 
-import com.mysql.jdbc.PreparedStatement;
+import com.mysql.cj.x.protobuf.MysqlxNotice;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import javax.swing.JOptionPane;
 
 public class conectaDAO {
@@ -17,9 +22,10 @@ public class conectaDAO {
     
     public Connection connectDB(){ 
         try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
             con = DriverManager.getConnection(url, user, password);     
-        } catch (SQLException erro){
-            JOptionPane.showMessageDialog(null, "Erro ConectaDAO" + erro.getMessage());
+        }catch (ClassNotFoundException | SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Erro de Conexão: " + ex.getMessage());      
         }
         return con;
     }
@@ -32,6 +38,25 @@ public class conectaDAO {
             }
         }catch(SQLException ex){
             JOptionPane.showMessageDialog(null, "Não foi possível se desconectar");
+        }
+    }
+    
+    public int inserir(ProdutosDTO produtos){
+        int status;
+
+        try{
+            
+            st = con.prepareStatement("INSERT INTO produtos (nome, datalancamento, categoria) VALUES(?,?,?)");
+            st.setString(1, produtos.getId().toString());
+            st.setString(2, produtos.getNome());
+            st.setString(3, produtos.getValor().toString());
+            st.setString(4, produtos.getStatus());
+            
+            status = st.executeUpdate();
+            return status;
+        }catch(SQLException ex){
+            JOptionPane.showMessageDialog(null, "Erro ao Conectar: " + ex.getMessage());
+            return ex.getErrorCode();
         }
     }
 }
