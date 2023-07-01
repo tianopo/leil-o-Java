@@ -200,7 +200,7 @@ public class listagemVIEW extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTable listaProdutos;
     // End of variables declaration//GEN-END:variables
-
+    conectaDAO dao = new conectaDAO();
     private void listarProdutos(){
         try {
             ProdutosDAO produtosdao = new ProdutosDAO();
@@ -219,7 +219,9 @@ public class listagemVIEW extends javax.swing.JFrame {
                 });
             }
         } catch (Exception e) {
-        } 
+        } finally{
+            dao.desconectar();
+        }
     
     }
 }
