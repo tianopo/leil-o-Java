@@ -68,8 +68,50 @@ public class ProdutosDAO {
         }
     }
     
+    public int venderProduto(ProdutosDTO produto){
+        con = new conectaDAO().connectDB();
+
+        int status;
+        try{
+            System.out.println("aqui");
+            st = con.prepareStatement("update produtos set nome = ?, valor = ?, status = ? where id = ?");
+            st.setString(1, produto.getNome());
+            st.setString(2, produto.getValor().toString());
+            st.setString(3, produto.getStatus());
+            st.setString(4, produto.getId().toString());
+            System.out.println(produto.getStatus() + 3 + con);
+            status = st.executeUpdate();
+            System.out.println(produto.getStatus() + 4);
+            return status;
+        }catch(SQLException ex) {
+            System.out.println(ex.getErrorCode());
+            return ex.getErrorCode();
+        }
+    }
     
-    
-        
+    public ArrayList<ProdutosDTO> consultaStatus(String status){
+        con = new conectaDAO().connectDB();
+        try{
+            ArrayList<ProdutosDTO> produtos = new ArrayList<>();
+            st = con.prepareStatement("select * from produtos where status = ?");
+            st.setString(1, status);
+            System.out.println(status);
+            rs = st.executeQuery();
+            
+            while(rs.next()){
+                ProdutosDTO produto = new ProdutosDTO();
+                produto.setId(rs.getInt("id"));
+                produto.setNome(rs.getString("nome"));
+                produto.setValor(rs.getInt("valor"));
+                produto.setStatus(rs.getString("status"));
+                produtos.add(produto);
+            }
+            System.out.println(status);
+            return produtos;
+        }catch(SQLException ex){
+            JOptionPane.showMessageDialog(null, "Erro de conexão " + ex.getMessage());
+            return null;
+        }
+    }
 }
 
