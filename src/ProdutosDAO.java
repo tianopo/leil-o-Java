@@ -87,6 +87,31 @@ public class ProdutosDAO {
             System.out.println(ex.getErrorCode());
             return ex.getErrorCode();
         }
-    }  
+    }
+    
+    public ArrayList<ProdutosDTO> consultaStatus(String status){
+        con = new conectaDAO().connectDB();
+        try{
+            ArrayList<ProdutosDTO> produtos = new ArrayList<>();
+            st = con.prepareStatement("select * from produtos where status = ?");
+            st.setString(1, status);
+            System.out.println(status);
+            rs = st.executeQuery();
+            
+            while(rs.next()){
+                ProdutosDTO produto = new ProdutosDTO();
+                produto.setId(rs.getInt("id"));
+                produto.setNome(rs.getString("nome"));
+                produto.setValor(rs.getInt("valor"));
+                produto.setStatus(rs.getString("status"));
+                produtos.add(produto);
+            }
+            System.out.println(status);
+            return produtos;
+        }catch(SQLException ex){
+            JOptionPane.showMessageDialog(null, "Erro de conexão " + ex.getMessage());
+            return null;
+        }
+    }
 }
 
