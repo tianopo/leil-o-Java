@@ -1,5 +1,7 @@
 
+import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.Arrays;
 import javax.swing.table.DefaultTableModel;
 
 /*
@@ -201,6 +203,10 @@ public class listagemVIEW extends javax.swing.JFrame {
     private javax.swing.JTable listaProdutos;
     // End of variables declaration//GEN-END:variables
     conectaDAO dao = new conectaDAO();
+    
+    private final String[] tableColumns = {"ID", "Nome", "Valor", "Status"};
+    DefaultTableModel model;
+    
     private void listarProdutos(){
         try {
             ProdutosDAO produtosdao = new ProdutosDAO();
@@ -222,6 +228,26 @@ public class listagemVIEW extends javax.swing.JFrame {
         } finally{
             dao.desconectar();
         }
+    }
     
+    private void updateTable(){
+        Connection con = new conectaDAO().connectDB();
+        ProdutosDAO produtosdao = new ProdutosDAO();
+        
+        ArrayList<ProdutosDTO> produto = produtosdao.listarProdutos();
+        
+        if(produto != null && !produto.isEmpty()){
+            model = new DefaultTableModel(tableColumns, 0);
+            for(Filme produto : produtos){
+            String[] linha = {filme.getFilme(), filme.getDatalancamento(), filme.getCategoria()};
+            System.out.println(Arrays.toString(linha));
+            model.addRow(linha);
+        }
+            tblConsulta.setModel(model);
+        }else{
+            model = new DefaultTableModel(tableColumns, 0);
+            tblConsulta.setModel(model);
+        }
+        dao.desconectar();
     }
 }

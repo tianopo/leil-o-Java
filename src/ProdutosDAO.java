@@ -68,8 +68,24 @@ public class ProdutosDAO {
         }
     }
     
-    
-    
-        
+    public int venderProduto(int id){
+        con = new conectaDAO().connectDB();
+        ProdutosDTO produtos = new ProdutosDTO();
+        int status;
+        try{
+            produtos.setId(id);
+            st = con.prepareStatement("update filmes set status = ? where id = ?");
+            st.setString(1, produtos.getStatus());
+            st.setString(2, produtos.getId().toString());
+            status = st.executeUpdate();
+            
+            produtos.setStatus("Vendido");
+            
+            return status;
+        }catch(SQLException ex) {
+            System.out.println(ex.getErrorCode());
+            return ex.getErrorCode();
+        }
+    }  
 }
 
