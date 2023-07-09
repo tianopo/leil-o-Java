@@ -139,11 +139,26 @@ public class listagemVIEW extends javax.swing.JFrame {
 
     private void btnVenderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVenderActionPerformed
         String id = id_produto_venda.getText();
+        int idInt = Integer.parseInt(id);
         
         ProdutosDAO produtosdao = new ProdutosDAO();
+        ArrayList<ProdutosDTO> produtos = produtosdao.listarProdutos();
         
-        //produtosdao.venderProduto(Integer.parseInt(id));
-        listarProdutos();
+        int uid = produtos.get(idInt-1).getId();
+        String nome = produtos.get(idInt-1).getNome();
+        int valor = produtos.get(idInt-1).getValor();
+        
+        ProdutosDTO produto = new ProdutosDTO();
+        
+        produto.setId(uid);
+        produto.setNome(nome);
+        produto.setValor(valor);
+        produto.setStatus("Vendido");
+        System.out.println(produto.getStatus()+ 2);
+        
+        produtosdao.venderProduto(produto);
+        System.out.println("atualização");
+        updateTable();
     }//GEN-LAST:event_btnVenderActionPerformed
 
     private void btnVendasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVendasActionPerformed
@@ -213,7 +228,7 @@ public class listagemVIEW extends javax.swing.JFrame {
             
             DefaultTableModel model = (DefaultTableModel) listaProdutos.getModel();
             model.setNumRows(0);
-            System.out.println(produtosdao.listagem);
+            System.out.println(produtosdao.listarProdutos());
             ArrayList<ProdutosDTO> listagem = produtosdao.listarProdutos();
             
             for(int i = 0; i < listagem.size(); i++){
@@ -234,19 +249,23 @@ public class listagemVIEW extends javax.swing.JFrame {
         Connection con = new conectaDAO().connectDB();
         ProdutosDAO produtosdao = new ProdutosDAO();
         
-        ArrayList<ProdutosDTO> produto = produtosdao.listarProdutos();
+        ArrayList<ProdutosDTO> produtos = produtosdao.listarProdutos();
         
-        if(produto != null && !produto.isEmpty()){
+        if(produtos != null && !produtos.isEmpty()){
             model = new DefaultTableModel(tableColumns, 0);
-            for(Filme produto : produtos){
-            String[] linha = {filme.getFilme(), filme.getDatalancamento(), filme.getCategoria()};
-            System.out.println(Arrays.toString(linha));
-            model.addRow(linha);
+            for(ProdutosDTO produto : produtos){
+                String[] linha = {
+                    produto.getId().toString(),
+                    produto.getNome(), 
+                    produto.getValor().toString(), 
+                    produto.getStatus()};
+                System.out.println(Arrays.toString(linha)+ produto.getStatus());
+                model.addRow(linha);
         }
-            tblConsulta.setModel(model);
+            listaProdutos.setModel(model);
         }else{
             model = new DefaultTableModel(tableColumns, 0);
-            tblConsulta.setModel(model);
+            listaProdutos.setModel(model);
         }
         dao.desconectar();
     }

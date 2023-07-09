@@ -68,19 +68,20 @@ public class ProdutosDAO {
         }
     }
     
-    public int venderProduto(int id){
+    public int venderProduto(ProdutosDTO produto){
         con = new conectaDAO().connectDB();
-        ProdutosDTO produtos = new ProdutosDTO();
+
         int status;
         try{
-            produtos.setId(id);
-            st = con.prepareStatement("update filmes set status = ? where id = ?");
-            st.setString(1, produtos.getStatus());
-            st.setString(2, produtos.getId().toString());
+            System.out.println("aqui");
+            st = con.prepareStatement("update produtos set nome = ?, valor = ?, status = ? where id = ?");
+            st.setString(1, produto.getNome());
+            st.setString(2, produto.getValor().toString());
+            st.setString(3, produto.getStatus());
+            st.setString(4, produto.getId().toString());
+            System.out.println(produto.getStatus() + 3 + con);
             status = st.executeUpdate();
-            
-            produtos.setStatus("Vendido");
-            
+            System.out.println(produto.getStatus() + 4);
             return status;
         }catch(SQLException ex) {
             System.out.println(ex.getErrorCode());

@@ -223,23 +223,4 @@ public class cadastroVIEW extends javax.swing.JFrame {
         cadastroNome.requestFocus();
         dao.desconectar();
     }
-    
-    private void updateTable(){
-        Connection con = new conectaDAO().connectDB();
-        ArrayList<ProdutosDTO> produtos = dao.listarProdutos();
-        
-        if(filmes != null && !filmes.isEmpty()){
-            model = new DefaultTableModel(tableColumns, 0);
-            for(Filme filme : filmes){
-            String[] linha = {filme.getFilme(), filme.getDatalancamento(), filme.getCategoria()};
-            System.out.println(Arrays.toString(linha));
-            model.addRow(linha);
-        }
-            tblConsulta.setModel(model);
-        }else{
-            model = new DefaultTableModel(tableColumns, 0);
-            tblConsulta.setModel(model);
-        }
-        dao.desconectar();
-    }
 }
